@@ -3,31 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Oxygen Mono",
+    "Ubuntu Monospace", "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+  background: linear-gradient(50deg, rgba(0, 0, 0, 1) 0%, rgba(23, 23, 23, 1) 83%, rgba(34, 34, 34, 1) 100%);
+  --color-primary: #ffffff;
+  --color-secondary: #ffffff;
+  --color-tertiaty: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+a {
+  text-decoration: none;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+a:hover {
+  text-decoration: none;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.content p {
+  @apply my-6;
+}
+
+.content ul {
+  @apply my-6;
 }
