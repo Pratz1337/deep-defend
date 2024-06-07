@@ -21,7 +21,7 @@ export default function Page() {
       if (fileType.startsWith("image/")) {
         formData.append("file", file);
         axios
-          .post("https://shiny-guacamole-6x595pq7w6xc47x6-5000.app.github.dev/detect", formData)
+          .post("https://7t6qwzmb-3000.inc1.devtunnels.ms/detect", formData)
           .then((res) => {
             console.log(res.data);
             setResult(res.data);
@@ -33,7 +33,7 @@ export default function Page() {
       } else {
         formData.append("file", file);
         axios
-          .post("https://shiny-guacamole-6x595pq7w6xc47x6-5000.app.github.dev/detect", formData)
+          .post("https://7t6qwzmb-3000.inc1.devtunnels.ms/detect", formData)
           .then((res) => {
             console.log(res.data);
             setResult(res.data);
