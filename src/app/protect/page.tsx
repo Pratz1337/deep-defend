@@ -63,7 +63,7 @@ export default function Page() {
         formData.append("file", file);
         console.log("audio");
         axios({
-          url: "https://7t6qwzmb-3000.inc1.devtunnels.ms/protect_audio", // replace with your Flask server URL and endpoint
+          url: "https://7t6qwzmb-5000.inc1.devtunnels.ms/protect_audio", // replace with your Flask server URL and endpoint
           method: "POST", // replace with the correct HTTP method if not GET
           responseType: "blob", // important
           data: formData,
