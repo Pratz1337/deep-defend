@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import axios from "axios";
 import { Dropzone, FileInputButton, FileMosaic } from "@files-ui/react";
 import Loading from "@/components/loading";
-export default function page() {
+export default function Page() {
   const convertToBase64 = (selectedFile: any) => {
     const reader = new FileReader();
 
