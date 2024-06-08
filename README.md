@@ -1,36 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+DEPLOYMENT URL:  https://deep-defend.vercel.app
+BACKEND URL: https://github.com/Tostiffent/deep-defend-backend
 
-## Getting Started
+This is a submission to JIT HACK 24 at JYOTHY INSTITUTE OF TECHNOLOGY
 
-First, run the development server:
+PROBLEM STATEMENT: Deepfake technology poses significant risks to media authenticity and personal security. Our challenge is to develop a platform that effectively detects and protects against deepfakes, ensuring trust in digital content through AI, user validation, and decentralized technologies.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+OUR SOLUTION: We make use of AI models to protect images and audios from manipulation by AI through introduction of noise and other factors into the media thus making it unprocessable by AI Models. We also make use of AI models to detect AI modified audios and videos using CNN models. We also use blockchain to introduce a voting system so that people can vote on wheather an Image is AI generated or real. We use solidity for smart contract, polygon testnet and metamask.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+TECH STACK: 
+FRONT END: Next js
+BACKEND: python and flask
+STORAGE: IPFS
+AI/ML: Tensorflow, keras, librosa, torch
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+VIDEO LINK: 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
