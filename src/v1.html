@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Voting System</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css">
+</head>
+<body>
+    <h1>Image Voting System</h1>
+    <div>
+        <h2>Upload Image</h2>
+        <input type="text" id="uploadImageHash" placeholder="Enter IPFS Image Hash (bytes32)">
+        <button onclick="uploadImage()">Upload Image</button>
+    </div>
+    <div>
+        <h2>Vote on Image</h2>
+        <button onclick="window.location.href = 'v2.html'">Vote</button>
+    </div>
+    <script>
+        // Smart Contract ABI
+        const contractABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "getImageVotes",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "hasVoted",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "images",
+                "outputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "votes",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "uploadImage",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "voteOnImage",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+
+        const contractAddress = "0x7EF2e0048f5bAeDe046f6BF797943daF4ED8CB47";
+
+        // Web3 and Contract Initialization
+        let web3;
+        let contract;
+
+        // Local vote counts storage
+        const localVoteCounts = {};
+
+        window.addEventListener('load', async () => {
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.enable();
+                    contract = new web3.eth.Contract(contractABI, contractAddress);
+                } catch (error) {
+                    console.error("User denied account access");
+                }
+            } else if (window.web3) {
+                web3 = new Web3(web3.currentProvider);
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+            } else {
+                console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            }
+        });
+
+        // Function to upload image
+        async function uploadImage() {
+   const accounts = await web3.eth.getAccounts();
+
+   const imageHash = document.getElementById("uploadImageHash").value;
+   contract.methods.uploadImage(imageHash).send({ from: accounts[0] })
+      .on('transactionHash', function(hash){
+         console.log("Transaction Hash: ", hash);
+      })
+      .on('confirmation', function(confirmationNumber, receipt){
+         console.log("Confirmation: ", confirmationNumber);
+      })
+      .on('receipt', function(receipt){
+         console.log("Receipt: ", receipt);
+         // Store the image hash in local storage
+         let uploadedHashes = localStorage.getItem('uploadedHashes');
+         if (uploadedHashes) {
+            uploadedHashes = JSON.parse(uploadedHashes);
+         } else {
+            uploadedHashes = [];
+         }
+         uploadedHashes.push(imageHash);
+         localStorage.setItem('uploadedHashes', JSON.stringify(uploadedHashes));
+      })
+      .on('error', function(error){
+         console.error("Error: ", error);
+      });
+}
+        
+    </script>
+    
+</body>
+</html>

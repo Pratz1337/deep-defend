@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Voting System</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0d1117!important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        .image-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .image-grid img {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .image-grid img:hover {
+            transform: scale(1.05);
+        }
+        .image-grid p {
+            margin: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+        .action-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .action-section input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .action-section button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .action-section button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1 >Image Voting System</h1>
+    
+    <div class="image-grid">
+        <!-- Image 1 -->
+        <div>
+            <img src="p1.jpg" alt="Image 1" data-hash="0x9200511682d2b342ac7653d582996c55c9d2d272be171b4ed8fc87375d4c88c4" onclick="copyToClipboard('0x9200511682d2b342ac7653d582996c55c9d2d272be171b4ed8fc87375d4c88c4')" style="width: 400px; height: 400px;">
+            <p>Votes: 0</p>
+        </div>
+
+        <!-- Image 2 -->
+        <div>
+            <img src="p2.jpg" alt="Image 2" data-hash="0x236f690d0877eebe18ab9189d3e43665b121ffffddb6b0308876e9482afcfa1a" onclick="copyToClipboard('0x236f690d0877eebe18ab9189d3e43665b121ffffddb6b0308876e9482afcfa1a')" style="width: 400px; height: 400px;">
+            <p>Votes: 0</p>
+        </div>
+
+        <!-- Image 3 -->
+        <div>
+            <img src="p3.jpg" alt="Image 3" data-hash="0x6765719b5c01b282ff5795f1572409037842c47c067714a7c68a17e8755c65f4" onclick="copyToClipboard('0x6765719b5c01b282ff5795f1572409037842c47c067714a7c68a17e8755c65f4')" style="width: 400px; height: 400px;">
+            <p>Votes: 0</p>
+        </div>
+    </div>
+    <div class="image-grid">
+        <!-- Image 4 -->
+        <div>
+            <img src="p4.jpg" alt="Image 4" data-hash="0x36a3b5c9be522d22c6ec8169457f27fe1fc9a5aacb1c6b12fbc005ea62fd4624" onclick="copyToClipboard('0x36a3b5c9be522d22c6ec8169457f27fe1fc9a5aacb1c6b12fbc005ea62fd4624')" style="width: 400px; height: 400px;">
+            <p>Votes: 0</p>
+        </div>
+
+        <!-- Image 5 -->
+        <div>
+            <img src="p5.jpg" alt="Image 5" data-hash="0x43df2b6076887ed0e1f3856accb1f89a668fe0530eddb989dd0a927588e88637" onclick="copyToClipboard('0x43df2b6076887ed0e1f3856accb1f89a668fe0530eddb989dd0a927588e88637')" style="width: 400px; height: 400px;">
+            <p>Votes: 0</p>
+        </div>
+
+        <!-- Image 6 -->
+        <div>
+            <img src="p6.jpg" alt="Image 6" data-hash="0x6d611257b4fc0ed78b311f854fe1b26a87e413c2f8ac4350a61ceb7ed772f122" onclick="copyToClipboard('0x6d611257b4fc0ed78b311f854fe1b26a87e413c2f8ac4350a61ceb7ed772f122')" style="width: 400px; height: 400px;">
+            <p id="voteCount"></p>
+        </div>
+    </div>
+    
+    <div class="action-section">
+        <h2 style="color: white;">Vote on Image</h2>
+        <input type="text" id="voteImageHash" placeholder="Enter IPFS Image Hash (bytes32)">
+        <button onclick="voteOnImage()">Vote</button>
+        <h2 style="color: white;">Get Image Votes</h2>
+        <input type="text" id="getImageVotesHash" placeholder="Enter IPFS Image Hash (bytes32)">
+        <button onclick="getImageVotes()">Get Votes</button>
+        
+    </div>
+
+    <script>
+        // Smart Contract ABI
+        const contractABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "getImageVotes",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "hasVoted",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "images",
+                "outputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "votes",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "uploadImage",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "imageHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "voteOnImage",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+
+        const contractAddress = "0x7EF2e0048f5bAeDe046f6BF797943daF4ED8CB47";
+        // Web3 and Contract Initialization
+        let web3;
+        let contract;
+
+        // Local vote counts storage
+        const localVoteCounts = {};
+
+        window.addEventListener('load', async () => {
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.enable();
+                    contract = new web3.eth.Contract(contractABI, contractAddress);
+                    fetchUploadedImages(); // Fetch images after contract is initialized
+                } catch (error) {
+                    console.error("User denied account access");
+                }
+            } else if (window.web3) {
+                web3 = new Web3(web3.currentProvider);
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                fetchUploadedImages(); // Fetch images after contract is initialized
+            } else {
+                console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            }
+        });
+
+        // Function to vote on image
+        async function voteOnImage() {
+            const accounts = await web3.eth.getAccounts();
+            const imageHash = document.getElementById("voteImageHash").value;
+
+            // Update local vote count
+            if (localVoteCounts[imageHash]) {
+                localVoteCounts[imageHash] += 1;
+            } else {
+                localVoteCounts[imageHash] = 1;
+            }
+
+            contract.methods.voteOnImage(imageHash).send({ from: accounts[0] })
+                .on('transactionHash', function(hash){
+                    console.log("Transaction Hash: ", hash);
+                })
+                .on('confirmation', function(confirmationNumber, receipt){
+                    console.log("Confirmation: ", confirmationNumber);
+                })
+                .on('receipt', function(receipt){
+                    console.log("Receipt: ", receipt);
+                })
+                .on('error', function(error){
+                    console.error("Error: ", error);
+                });
+        }
+
+        // Function to get image votes
+        async function getImageVotes() {
+            const imageHash = document.getElementById("getImageVotesHash").value;
+
+            // Display local vote count
+            if (localVoteCounts[imageHash]) {
+                document.getElementById("voteCount").innerText = "Votes: " + localVoteCounts[imageHash];
+            } else {
+                document.getElementById("voteCount").innerText = "Votes: 0";
+            }
+        }
+
+        // Function to copy text to clipboard
+        function copyToClipboard(hash) {
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = hash;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            alert("Copied the hash: " + hash);
+        }
+
+        function displayUploadedHashes() {
+            const uploadedHashesDiv = document.getElementById('uploadedHashes');
+            let uploadedHashes = localStorage.getItem('uploadedHashes');
+            if (uploadedHashes) {
+                uploadedHashes = JSON.parse(uploadedHashes);
+                uploadedHashesDiv.innerHTML = '<h2>Uploaded Image Hashes:</h2>';
+                uploadedHashes.forEach(hash => {
+                    uploadedHashesDiv.innerHTML += `<p>${hash}</p>`;
+                });
+            }
+        }
+
+        // Call displayUploadedHashes() when the page loads
+        window.addEventListener('load', displayUploadedHashes);
+    </script>
+</body>
+</html>
