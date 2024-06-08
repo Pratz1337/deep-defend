@@ -15,3 +15,5 @@ AI/ML: Tensorflow, keras, librosa, torch
 
 VIDEO LINK: 
 
+FLOW OF PROCESS: [img](https://github.com/Tostiffent/deep-defend/blob/972334b8a8779ab45aecb44bf1be04c07106574e/flow.jpeg)
+
