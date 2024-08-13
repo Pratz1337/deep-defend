@@ -1,5 +1,4 @@
-DEPLOYMENT URL:  https://deep-defend.vercel.app
-BACKEND URL: https://github.com/Tostiffent/deep-defend-backend
+
 
 This is a submission to JIT HACK 24 at JYOTHY INSTITUTE OF TECHNOLOGY
 
